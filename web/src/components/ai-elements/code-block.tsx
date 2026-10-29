@@ -21,7 +21,9 @@ For commercial licensing, please contact support@quantumnous.com
 
 import { javascript } from '@codemirror/lang-javascript'
 import { markdown } from '@codemirror/lang-markdown'
-import { HighlightStyle, syntaxHighlighting } from '@codemirror/language'
+import { HighlightStyle, syntaxHighlighting, StreamLanguage } from '@codemirror/language'
+import { shell } from '@codemirror/legacy-modes/mode/shell'
+import { python } from '@codemirror/lang-python'
 import { EditorState, type Extension } from '@codemirror/state'
 import {
   EditorView,
@@ -145,7 +147,6 @@ const codeMirrorTheme = EditorView.theme({
     lineHeight: '1.5rem',
     minHeight: 'var(--code-editor-min-height)',
     minWidth: 'max-content',
-    padding: '1rem 1rem 1rem 0',
   },
   '.cm-editor': {
     background: 'transparent',
@@ -187,6 +188,18 @@ const codeMirrorTheme = EditorView.theme({
   },
 })
 
+const codeMirrorNoLineNumberPaddingTheme = EditorView.theme({
+  '.cm-content': {
+    padding: '1rem',
+  },
+})
+
+const codeMirrorLineNumberPaddingTheme = EditorView.theme({
+  '.cm-content': {
+    padding: '1rem 1rem 1rem 0',
+  },
+})
+
 const codeMirrorHighlightStyle = syntaxHighlighting(
   HighlightStyle.define([
     { tag: highlightTags.heading, color: '#e06c75', fontWeight: '600' },
@@ -210,6 +223,19 @@ const codeMirrorHighlightStyle = syntaxHighlighting(
       tag: [highlightTags.meta, highlightTags.comment],
       color: 'var(--muted-foreground)',
     },
+    {
+      tag: [
+        highlightTags.variableName, highlightTags.propertyName, highlightTags.className,
+      ],
+      color: '#e06c75',
+    },
+    {
+      tag: [
+        highlightTags.standard(highlightTags.variableName), highlightTags.typeName, highlightTags.labelName,
+      ],
+      color: '#e5c07b',
+    },
+    { tag: highlightTags.operator, color: '#56b6c2' },
   ])
 )
 
@@ -238,6 +264,19 @@ function getCodeMirrorLanguageExtension(language: BundledLanguage | string) {
 
   if (requestedLanguage === 'typescript' || requestedLanguage === 'tsx') {
     return javascript({ jsx: requestedLanguage === 'tsx', typescript: true })
+  }
+
+  if (requestedLanguage === 'python') {
+    return python()
+  }
+
+  if (
+    requestedLanguage === 'bash' ||
+    requestedLanguage === 'shell' ||
+    requestedLanguage === 'sh' ||
+    requestedLanguage === 'zsh'
+  ) {
+    return StreamLanguage.define(shell)
   }
 
   return []
@@ -308,6 +347,9 @@ function getCodeMirrorExtensions(options: {
 
   if (options.showLineNumbers) {
     extensions.unshift(lineNumbers())
+    extensions.push(codeMirrorLineNumberPaddingTheme)
+  } else {
+    extensions.push(codeMirrorNoLineNumberPaddingTheme)
   }
 
   return extensions
