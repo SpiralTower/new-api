@@ -25,7 +25,7 @@ import {
   Zap,
 } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import type { BundledLanguage } from 'shiki/bundle/web'
 
 import {
@@ -625,11 +625,16 @@ function CodeSamplesSection(props: {
       </div>
 
       <p className='text-muted-foreground mt-2 text-xs'>
-        {t('Replace')}{' '}
-        <code className='bg-muted rounded px-1 py-0.5 font-mono text-[11px]'>
-          {'<YOUR_API_KEY>'}
-        </code>{' '}
-        {t('with the API key from your token settings.')}
+        <Trans
+          t={t}
+          i18nKey='Replace <code>{{apiKey}}</code> with the API key from your token settings.'
+          values={{ apiKey: '<YOUR_API_KEY>' }}
+          components={{
+            code: (
+              <code className='bg-muted rounded px-1 py-0.5 font-mono text-[11px]' />
+            ),
+          }}
+        />
       </p>
     </section>
   )
@@ -820,15 +825,19 @@ function AuthSection() {
         <ChevronRight className='text-muted-foreground mt-0.5 size-3.5 shrink-0' />
         <div className='space-y-1.5 text-xs leading-relaxed'>
           <p>
-            {t('All requests must include')}{' '}
-            <code className='bg-muted rounded px-1 py-0.5 font-mono text-[11px]'>
-              Authorization: Bearer &lt;YOUR_API_KEY&gt;
-            </code>{' '}
-            {t('header. Anthropic-formatted endpoints accept the')}{' '}
-            <code className='bg-muted rounded px-1 py-0.5 font-mono text-[11px]'>
-              x-api-key
-            </code>{' '}
-            {t('header instead.')}
+            <Trans
+              t={t}
+              i18nKey='All requests must include the <code>{{authHeader}}</code> header. Anthropic-formatted endpoints accept the <code>{{xApiKey}}</code> header instead.'
+              values={{
+                authHeader: 'Authorization: Bearer <YOUR_API_KEY>',
+                xApiKey: 'x-api-key',
+              }}
+              components={{
+                code: (
+                  <code className='bg-muted rounded px-1 py-0.5 font-mono text-[11px]' />
+                ),
+              }}
+            />
           </p>
           <p className='text-muted-foreground'>
             {t(
