@@ -21,9 +21,13 @@ For commercial licensing, please contact support@quantumnous.com
 
 import { javascript } from '@codemirror/lang-javascript'
 import { markdown } from '@codemirror/lang-markdown'
-import { HighlightStyle, syntaxHighlighting, StreamLanguage } from '@codemirror/language'
-import { shell } from '@codemirror/legacy-modes/mode/shell'
 import { python } from '@codemirror/lang-python'
+import {
+  HighlightStyle,
+  syntaxHighlighting,
+  StreamLanguage,
+} from '@codemirror/language'
+import { shell } from '@codemirror/legacy-modes/mode/shell'
 import { EditorState, type Extension } from '@codemirror/state'
 import {
   EditorView,
@@ -225,13 +229,17 @@ const codeMirrorHighlightStyle = syntaxHighlighting(
     },
     {
       tag: [
-        highlightTags.variableName, highlightTags.propertyName, highlightTags.className,
+        highlightTags.variableName,
+        highlightTags.propertyName,
+        highlightTags.className,
       ],
       color: '#e06c75',
     },
     {
       tag: [
-        highlightTags.standard(highlightTags.variableName), highlightTags.typeName, highlightTags.labelName,
+        highlightTags.standard(highlightTags.variableName),
+        highlightTags.typeName,
+        highlightTags.labelName,
       ],
       color: '#e5c07b',
     },
